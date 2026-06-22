@@ -1,5 +1,6 @@
 import os
 
+import httpx
 from telegram import Update
 from telegram.ext import (
     Application,
@@ -8,8 +9,6 @@ from telegram.ext import (
     MessageHandler,
     filters,
 )
-
-import qa
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -31,7 +30,11 @@ async def answer_question(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     thinking = await update.message.reply_text("Думаю...")
 
     try:
-        answer = qa.answer(question)
+        api_url = os.getenv("API_URL", "http://127.0.0.1:8000")
+        async with httpx.AsyncClient(timeout=60) as client:
+            response = await client.post(f"{api_url}/ask", json={"question": question})
+            response.raise_for_status()
+            answer = response.json()["answer"]
     except Exception as error:
         answer = f"Не получилось ответить: {error}"
 

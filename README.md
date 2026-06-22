@@ -31,6 +31,7 @@ pip install -r requirements.txt
 
 ```env
 BOT_TOKEN=your_token_here
+API_URL=http://127.0.0.1:8000
 OPENAI_API_KEY=sk-your_openai_key_here
 OPENAI_MODEL=gpt-4o
 OPENAI_BASE_URL=https://api.openai.com/v1
